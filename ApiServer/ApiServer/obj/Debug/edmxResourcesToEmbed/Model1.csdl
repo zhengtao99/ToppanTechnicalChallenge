@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ToppanTechnicalChallengeDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Universities" Relationship="Self.FK_Universities_Countries" FromRole="Countries" ToRole="Universities" />
+  </EntityType>
+  <EntityType Name="University">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="CountryId" Type="Int32" />
+    <Property Name="Webpages" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="DeletedAt" Type="DateTime" Precision="3" />
+    <Property Name="IsBookmarked" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_Universities_Countries" FromRole="Universities" ToRole="Countries" />
+    <NavigationProperty Name="UsersUniversity" Relationship="Self.FK_Universities_UsersUniversity" FromRole="Universities" ToRole="UsersUniversities" />
+  </EntityType>
+  <EntityType Name="UniversityBookmark">
+    <Key>
+      <PropertyRef Name="UniversityId" />
+    </Key>
+    <Property Name="UniversityId" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UsersUniversities" Relationship="Self.FK_UsersUniversity_Users" FromRole="Users" ToRole="UsersUniversities" />
+  </EntityType>
+  <EntityType Name="UsersUniversity">
+    <Key>
+      <PropertyRef Name="UniversityId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="UniversityId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="University" Relationship="Self.FK_Universities_UsersUniversity" FromRole="UsersUniversities" ToRole="Universities" />
+    <NavigationProperty Name="User" Relationship="Self.FK_UsersUniversity_Users" FromRole="UsersUniversities" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_Universities_Countries">
+    <End Role="Countries" Type="Self.Country" Multiplicity="0..1" />
+    <End Role="Universities" Type="Self.University" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Countries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Universities">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Universities_UsersUniversity">
+    <End Role="UsersUniversities" Type="Self.UsersUniversity" Multiplicity="1" />
+    <End Role="Universities" Type="Self.University" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="UsersUniversities">
+        <PropertyRef Name="UniversityId" />
+      </Principal>
+      <Dependent Role="Universities">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersUniversity_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="UsersUniversities" Type="Self.UsersUniversity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersUniversities">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ToppanTechnicalChallengeDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Universities" EntityType="Self.University" />
+    <EntitySet Name="UniversityBookmarks" EntityType="Self.UniversityBookmark" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="UsersUniversities" EntityType="Self.UsersUniversity" />
+    <AssociationSet Name="FK_Universities_Countries" Association="Self.FK_Universities_Countries">
+      <End Role="Countries" EntitySet="Countries" />
+      <End Role="Universities" EntitySet="Universities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Universities_UsersUniversity" Association="Self.FK_Universities_UsersUniversity">
+      <End Role="UsersUniversities" EntitySet="UsersUniversities" />
+      <End Role="Universities" EntitySet="Universities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersUniversity_Users" Association="Self.FK_UsersUniversity_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UsersUniversities" EntitySet="UsersUniversities" />
+    </AssociationSet>
+    <FunctionImport Name="SP_CreateUniversity">
+      <Parameter Name="userId" Mode="In" Type="Int32" />
+      <Parameter Name="countryId" Mode="In" Type="Int32" />
+      <Parameter Name="name" Mode="In" Type="String" />
+      <Parameter Name="webpages" Mode="In" Type="String" />
+      <Parameter Name="createdAt" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="SP_GetUniversityById" ReturnType="Collection(ToppanTechnicalChallengeDBModel.SP_GetUniversityById_Result)">
+      <Parameter Name="UniversityId" Mode="In" Type="Int32" />
+      <Parameter Name="username" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_UpdateUniversityById">
+      <Parameter Name="universityId" Mode="In" Type="Int32" />
+      <Parameter Name="username" Mode="In" Type="String" />
+      <Parameter Name="universityName" Mode="In" Type="String" />
+      <Parameter Name="webpages" Mode="In" Type="String" />
+      <Parameter Name="countryName" Mode="In" Type="String" />
+      <Parameter Name="modifiedDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="SP_GetUniversityById_Result">
+    <Property Type="Int32" Name="UniversityId" Nullable="true" />
+    <Property Type="String" Name="Username" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="CountryName" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="200" />
+    <Property Type="DateTime" Name="CreatedAt" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="LastModified" Nullable="true" Precision="23" />
+    <Property Type="String" Name="Webpages" Nullable="true" />
+    <Property Type="Boolean" Name="IsBookmarked" Nullable="false" />
+    <Property Type="Boolean" Name="IsActive" Nullable="false" />
+  </ComplexType>
+</Schema>

@@ -1,0 +1,35 @@
+﻿<div style="display:inline-block">
+    <div>
+        <form style="float:left" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+            <input id="TbUsername" type="text" class="form-control form-control-dark" placeholder="Username">
+
+        </form>
+
+        <form style="float:left" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+
+            <input id="TbPassword" type="password" class="form-control form-control-dark" placeholder="Password">
+        </form>
+
+    </div>
+    <div id="LoginErrorMsg" style="display:none;">
+        <div style="height:10px; margin:50px 0 0 0;" class="alert alert-danger d-flex align-items-center col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+            <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"></use></svg>
+            <div>
+                Invalid Password
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-end">
+
+    <button type="button" class="btn btn-warning">Login</button>
+</div>
+<script>
+    $("#TbUsername").click(function () {
+        $("#LoginErrorMsg").hide();
+    })
+    $("#TbPassword").click(function () {
+        $("#LoginErrorMsg").hide();
+    })
+  
+</script>

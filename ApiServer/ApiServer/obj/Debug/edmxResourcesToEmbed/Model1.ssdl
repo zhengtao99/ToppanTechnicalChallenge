@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ToppanTechnicalChallengeDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Countries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Universities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="CountryId" Type="int" />
+    <Property Name="Webpages" Type="nvarchar(max)" />
+    <Property Name="CreatedAt" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="DeletedAt" Type="datetime" />
+    <Property Name="IsBookmarked" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UniversityBookmarks">
+    <Key>
+      <PropertyRef Name="UniversityId" />
+    </Key>
+    <Property Name="UniversityId" Type="int" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="UsersUniversities">
+    <Key>
+      <PropertyRef Name="UniversityId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="UniversityId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Universities_Countries">
+    <End Role="Countries" Type="Self.Countries" Multiplicity="0..1" />
+    <End Role="Universities" Type="Self.Universities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Countries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Universities">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Universities_UsersUniversity">
+    <End Role="UsersUniversities" Type="Self.UsersUniversities" Multiplicity="1" />
+    <End Role="Universities" Type="Self.Universities" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="UsersUniversities">
+        <PropertyRef Name="UniversityId" />
+      </Principal>
+      <Dependent Role="Universities">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UsersUniversity_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="UsersUniversities" Type="Self.UsersUniversities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UsersUniversities">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="SP_CreateUniversity" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="int" Mode="In" />
+    <Parameter Name="countryId" Type="int" Mode="In" />
+    <Parameter Name="name" Type="nvarchar" Mode="In" />
+    <Parameter Name="webpages" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="createdAt" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="SP_GetUniversityById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UniversityId" Type="int" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="SP_UpdateUniversityById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="universityId" Type="int" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+    <Parameter Name="universityName" Type="nvarchar" Mode="In" />
+    <Parameter Name="webpages" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="countryName" Type="nvarchar" Mode="In" />
+    <Parameter Name="modifiedDate" Type="datetime" Mode="In" />
+  </Function>
+  <EntityContainer Name="ToppanTechnicalChallengeDBModelStoreContainer">
+    <EntitySet Name="Countries" EntityType="Self.Countries" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Universities" EntityType="Self.Universities" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UniversityBookmarks" EntityType="Self.UniversityBookmarks" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersUniversities" EntityType="Self.UsersUniversities" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Universities_Countries" Association="Self.FK_Universities_Countries">
+      <End Role="Countries" EntitySet="Countries" />
+      <End Role="Universities" EntitySet="Universities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Universities_UsersUniversity" Association="Self.FK_Universities_UsersUniversity">
+      <End Role="UsersUniversities" EntitySet="UsersUniversities" />
+      <End Role="Universities" EntitySet="Universities" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UsersUniversity_Users" Association="Self.FK_UsersUniversity_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UsersUniversities" EntitySet="UsersUniversities" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

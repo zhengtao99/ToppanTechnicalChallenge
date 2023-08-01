@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ToppanTechnicalChallengeDBModelStoreContainer" CdmEntityContainer="ToppanTechnicalChallengeDBEntities">
+    <EntitySetMapping Name="Countries">
+      <EntityTypeMapping TypeName="ToppanTechnicalChallengeDBModel.Country">
+        <MappingFragment StoreEntitySet="Countries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Universities">
+      <EntityTypeMapping TypeName="ToppanTechnicalChallengeDBModel.University">
+        <MappingFragment StoreEntitySet="Universities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+          <ScalarProperty Name="Webpages" ColumnName="Webpages" />
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="DeletedAt" ColumnName="DeletedAt" />
+          <ScalarProperty Name="IsBookmarked" ColumnName="IsBookmarked" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UniversityBookmarks">
+      <EntityTypeMapping TypeName="ToppanTechnicalChallengeDBModel.UniversityBookmark">
+        <MappingFragment StoreEntitySet="UniversityBookmarks">
+          <ScalarProperty Name="UniversityId" ColumnName="UniversityId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="ToppanTechnicalChallengeDBModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UsersUniversities">
+      <EntityTypeMapping TypeName="ToppanTechnicalChallengeDBModel.UsersUniversity">
+        <MappingFragment StoreEntitySet="UsersUniversities">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="UniversityId" ColumnName="UniversityId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="SP_CreateUniversity" FunctionName="ToppanTechnicalChallengeDBModel.Store.SP_CreateUniversity" />
+    <FunctionImportMapping FunctionImportName="SP_GetUniversityById" FunctionName="ToppanTechnicalChallengeDBModel.Store.SP_GetUniversityById">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ToppanTechnicalChallengeDBModel.SP_GetUniversityById_Result">
+          <ScalarProperty Name="UniversityId" ColumnName="UniversityId" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="Webpages" ColumnName="Webpages" />
+          <ScalarProperty Name="IsBookmarked" ColumnName="IsBookmarked" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_UpdateUniversityById" FunctionName="ToppanTechnicalChallengeDBModel.Store.SP_UpdateUniversityById" />
+  </EntityContainerMapping>
+</Mapping>

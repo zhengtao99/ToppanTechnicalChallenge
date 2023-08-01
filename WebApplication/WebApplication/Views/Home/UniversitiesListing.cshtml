@@ -1,0 +1,120 @@
+﻿@using WebApplication.Controllers
+
+<div id="UniversitiesPanelLoadingGif" style="display: none; margin: 30px 0 0 0;">
+    <div class="LoadingGif row" style="margin: 50px 0 0 0;">
+        <div class="text-center">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
+        </div>
+    </div>
+</div>
+
+<div id="UniversitiesPanel" style="margin:30px 0 0 0; display:none;">
+    <h1 style="margin:0 0 30px 0;">Universities</h1>
+    <div class="row">
+        <div class="col-md-7">
+            <button type="button" class="btn btn-warning"><img style="height:20px; margin:0 5px 4px 0;" src="/assets/images/plus-solid.svg" alt="My Happy SVG" />Create a University</button>
+        </div>
+        <div class="col-md-5">
+            <div class="row" style="float:right; padding-right:0px;">
+                <div style="width: 70%">
+                    <input id="TbSearch" type="text" class="form-control form-control-dark" placeholder="Enter Keyword...">
+                </div>
+                <div style="width: 30%">
+                    <button id="BtnSearch" type="button" class="btn btn-warning">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="UniversitiesListing" style="margin:30px 0 0 0;" class="table table-hover">
+        <thead>
+            <tr id="UniversitiesListingHeader">
+            </tr>
+        </thead>
+        <tbody id="UniversitiesListingDataRowBody">
+            <tr id="UniversitiesListingDataRow" style="display:none;">
+            </tr>
+        </tbody>
+    </table>
+    <div id="NumofRecords" style="margin-top:30px;"></div>
+</div>
+<div id="SearchLoadingGif" class="spinner-border" style="width: 25px; height: 25px; margin:0 0 0 5px; float:right; display:none;" role="status"></div>
+
+<script>
+
+    let dataRowElement = $("#UniversitiesListingDataRow").clone().show();
+
+    RefreshUniversitiesListing("");
+
+    $("#BtnSearch").click(function () {
+        $("#BtnSearch").html($("#SearchLoadingGif").clone().show());
+        // To show loading when there are large amount of data
+        setTimeout(function () { RefreshUniversitiesListing($("#TbSearch").val()) }, 500);
+
+    })
+
+    function RefreshUniversitiesListing(searchFilter) {
+        $("#UniversitiesPanelLoadingGif").hide();
+
+        $.ajax({
+            method: "GET",
+            url: "@ConfigController.ApiEndpointUrl/GET/University",
+            data: {
+                SearchFilter: searchFilter
+            }
+        })
+            .done(function (res) {
+                if (res) {
+                    $("#UniversitiesPanel").show();
+                    if (res.NumofRecords == 0) {
+                        $("#NumofRecords").html("No Records Found.");
+                    }
+                    else {
+                        $("#NumofRecords").html(`${res.NumofRecords} Records`);
+                    }
+
+                    $("#UniversitiesListingHeader").html("")
+                        .append('<th scope="col">University Name</th>')
+                        .append('<th scope="col">Country</th>')
+                        .append('<th scope="col">Web Pages</th>')
+                        .append('<th scope="col" style="width: 200px"></th>');
+
+                    $("#UniversitiesListingDataRowBody").html("");
+
+                    $(res.Results).each(function () {
+
+                        let dataRowElementCopy = dataRowElement.clone();
+                        dataRowElementCopy.append(`<td>${this.UniversityName}</td>`)
+                            .append(`<td>${this.CountryName}</td>`);
+
+                        let webPageList = "";
+                        if (this.WebPages) {
+                            $(this.WebPages).each(function () {
+                                webPageList += `<li><a href = '${this}'>${this}</a></li>`;
+                            })
+                        }
+
+                        dataRowElementCopy.append(`<td><ul>${webPageList}</ul></td>`);
+
+                        if (this.LastModified) {
+                            dataRowElementCopy.append(`<td>Last modified <i>${this.LastModified}</i> <br/> by ${this.CreatedBy} </td>`);
+                        }
+
+                        else if (this.CreatedAt) {
+                            dataRowElementCopy.append(`<td>Created <i>${this.CreatedAt}</i> <br/> by ${this.CreatedBy} </td>`);
+                        }
+
+
+                        $("#UniversitiesListingDataRowBody").append(dataRowElementCopy)
+
+
+                        console.log($("#UniversitiesListingDataRowBody").html());
+                    })
+                }
+            })
+            .fail(function () {
+
+            })
+            $("#UniversitiesPanelLoadingGif").hide();
+            $("#BtnSearch").html("Search");
+    }
+</script>
