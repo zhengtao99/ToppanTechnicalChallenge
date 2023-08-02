@@ -23,6 +23,10 @@ Dummy accounts for testing:
 2. username: User2
    password: P@ssw0rd321
 
+POST/Login Parameters:
+- [Required: uri] Username 
+- [Required: uri] Password
+
 GET/university Parameters:
 - [Optional: uri] Token 
 - [Optional: uri] SearchFilter
